@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESG 리포팅 툴 - 자주 묻는 질문</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #002b5b; /* 상단 네이비 톤 */
+            --accent-color: #3b82f6;  /* 포인트 블루 */
+            --bg-color: #f9fafb;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        /* 헤더 & 검색바 */
+        header {
+            background-color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            outline: none;
+            transition: border 0.3s;
+            background-color: #f3f4f6;
+        }
+
+        .search-container input:focus {
+            border-color: var(--accent-color);
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 메인 레이아웃 */
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            display: flex;
+            gap: 40px;
+            padding: 0 20px;
+        }
+
+        /* 왼쪽 사이드바 카테고리 */
+        nav {
+            width: 200px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav li {
+            padding: 12px 0;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav li:hover, nav li.active {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+
+        /* 오른쪽 질문 리스트 */
+        .faq-content {
+            flex-grow: 1;
+        }
+
+        .faq-group {
+            margin-bottom: 50px;
+        }
+
+        .faq-group h2 {
+            font-size: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .faq-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .faq-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .faq-item span {
+            font-size: 16px;
+        }
+
+        .faq-item::after {
+            content: 'Q';
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        /* 검색 결과 없음 처리 */
+        .no-result {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>무엇이든 찾아보세요</h1>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="궁금한 기능을 검색해보세요 (예: 요금제, 보고서)">
+    </div>
+</header>
+
+<div class="container">
+    <nav>
+        <ul id="categoryList">
+            <li class="active" onclick="filterCategory('all')">전체보기</li>
+            <li onclick="filterCategory('group1')">계정 및 서비스</li>
+            <li onclick="filterCategory('group2')">리포트 기획</li>
+            <li onclick="filterCategory('group3')">데이터 입력</li>
+            <li onclick="filterCategory('group4')">검토 및 공시</li>
+        </ul>
+    </nav>
+
+    <main class="faq-content" id="faqContent">
+        
+        <section class="faq-group" data-group="group1">
+            <h2>Group 1: 계정 및 서비스 관리</h2>
+            <div class="faq-item"><span>계정 및 팀원 관리 방법이 궁금해요.</span></div>
+            <div class="faq-item"><span>요금제 변경 및 결제 수단은 어디서 등록하나요?</span></div>
+        </section>
+
+        <section class="faq-group" data-group="group2">
+            <h2>Group 2: 리포트 기획 및 설정</h2>
+            <div class="faq-item"><span>신규 보고서 생성 및 기존 보고서 관리</span></div>
+            <div class="faq-item"><span>산업별 맞춤형 중요주제(Materiality) 선정 가이드</span></div>
+            <div class="faq-item"><span>목차 구성 및 메인 페이지 디자인 커스텀</span></div>
+        </section>
+
+        <section class="faq-group" data-group="group3">
+            <h2>Group 3: 콘텐츠 편집 및 데이터 입력</h2>
+            <div class="faq-item"><span>보고서 본문 작성 및 에디터 사용법</span></div>
+            <div class="faq-item"><span>차트 및 데이터 시각화 도구 활용하기</span></div>
+            <div class="faq-item"><span>글로벌 공시 인덱스 테이블(GRI/SASB/TCFD) 연동</span></div>
+            <div class="faq-item"><span>문서함 보관 및 정량 데이터 자산 관리</span></div>
+        </section>
+
+        <section class="faq-group" data-group="group4">
+            <h2>Group 4: 검토, 번역 및 최종 공시</h2>
+            <div class="faq-item"><span>리포트 내부 검토 및 제3자 검증 프로세스</span></div>
+            <div class="faq-item"><span>다국어 전환 및 AI 자동 번역 기능</span></div>
+            <div class="faq-item"><span>보고서 외부 공개 설정 및 아카이빙 방법</span></div>
+        </section>
+
+        <div id="noResult" class="no-result">검색 결과가 없습니다. 다른 키워드로 검색해보세요.</div>
+    </main>
+</div>
+
+<script>
+    // 1. 카테고리 필터링 기능
+    function filterCategory(groupId) {
+        const groups = document.querySelectorAll('.faq-group');
+        const navItems = document.querySelectorAll('nav li');
+
+        // 사이드바 활성화 표시
+        navItems.forEach(item => item.classList.remove('active'));
+        event.target.classList.add('active');
+
+        // 콘텐츠 필터링
+        groups.forEach(group => {
+            if (groupId === 'all' || group.getAttribute('data-group') === groupId) {
+                group.style.display = 'block';
+            } else {
+                group.style.display = 'none';
+            }
+        });
+    }
+
+    // 2. 검색 기능
+    const searchInput = document.getElementById('searchInput');
+    const faqItems = document.querySelectorAll('.faq-item');
+    const noResult = document.getElementById('noResult');
+
+    searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        let hasVisibleItem = false;
+
+        faqItems.forEach(item => {
+            const text = item.innerText.toLowerCase();
+            if (text.includes(term)) {
+                item.style.display = 'flex';
+                hasVisibleItem = true;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        // 그룹 제목 처리 (그룹 내 아이템이 하나도 없으면 제목도 숨김)
+        const groups = document.querySelectorAll('.faq-group');
+        groups.forEach(group => {
+            const itemsInGroup = group.querySelectorAll('.faq-item');
+            const visibleItems = Array.from(itemsInGroup).filter(i => i.style.display !== 'none');
+            group.style.display = visibleItems.length > 0 ? 'block' : 'none';
+        });
+
+        noResult.style.display = hasVisibleItem ? 'none' : 'block';
+    });
+</script>
+
+</body>
+</html>
