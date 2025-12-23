@@ -936,8 +936,7 @@
 </div>
 
 <script>
-    // 1. 아코디언 제어: 클릭 시 'open' 클래스 토글
-    // 이벤트 위임 방식을 사용하여 검색 후에도 이벤트가 안정적으로 유지되도록 합니다.
+    // 1. 아코디언 제어 (이벤트 위임 방식: 검색 후에도 안정적 작동)
     document.addEventListener('click', (e) => {
         const question = e.target.closest('.faq-question');
         if (question) {
@@ -946,11 +945,11 @@
         }
     });
 
-    // 2. 카테고리 전환 기능
+    // 2. 카테고리 전환 및 UI 초기화
     function showSection(sectionId) {
         document.querySelectorAll('.faq-section').forEach(sec => {
             sec.classList.remove('active');
-            sec.style.display = 'none'; // 섹션 전환 시 display 제어
+            sec.style.display = 'none';
         });
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
         
@@ -960,114 +959,82 @@
             targetSection.style.display = 'block';
         }
         
-        // 현재 클릭된 메뉴 활성화
         if (event && event.currentTarget) {
             event.currentTarget.classList.add('active');
         }
         
-        // 검색창 초기화
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) searchInput.value = '';
-        
-        // '처음으로 돌아가기' 버튼 숨김
-        document.getElementById('back-to-home').style.display = 'none';
-        document.getElementById('no-results').style.display = 'none';
+        clearSearch(); // 섹션 이동 시 검색 상태 완전 초기화
     }
 
-// 3. 검색 및 복구 기능 (하이라이트 추가)
-const searchInput = document.getElementById('searchInput');
-const backBtn = document.getElementById('back-to-home');
-const noResults = document.getElementById('no-results');
+    // 3. 검색 및 복구 기능 (형광펜 효과 포함)
+    const searchInput = document.getElementById('searchInput');
+    const backBtn = document.getElementById('back-to-home');
+    const noResults = document.getElementById('no-results');
 
-// HTML 태그를 제외하고 텍스트만 안전하게 강조하는 함수
-function highlightText(html, term) {
-    const regex = new RegExp(`(${term})(?=[^>]*<|[^>]*$)`, 'gi');
-    return html.replace(regex, '<span class="highlight">$1</span>');
-}
-
-// 강조 표시를 모두 제거하는 함수
-function removeHighlight() {
-    document.querySelectorAll('.highlight').forEach(span => {
-        const parent = span.parentNode;
-        parent.replaceChild(document.createTextNode(span.textContent), span);
-        parent.normalize(); // 분리된 텍스트 노드 정리
-    });
-}
-
-searchInput.addEventListener('input', (e) => {
-    const term = e.target.value.toLowerCase().trim();
-    const sections = document.querySelectorAll('.faq-section');
-    const items = document.querySelectorAll('.faq-item');
-    let hasAnyResult = false;
-
-    removeHighlight(); // 이전 검색 강조 제거
-
-    if (term === '') {
-        resetUI();
-        return;
+    // 형광펜 효과 적용 함수
+    function highlightText(html, term) {
+        if (!term) return html;
+        const regex = new RegExp(`(${term})(?=[^>]*<|[^>]*$)`, 'gi');
+        return html.replace(regex, '<span class="highlight">$1</span>');
     }
 
-    sections.forEach(sec => sec.style.display = 'none');
-    backBtn.style.display = 'block';
+    // 강조 표시 제거 및 텍스트 복구
+    function removeHighlight() {
+        document.querySelectorAll('.highlight').forEach(span => {
+            const parent = span.parentNode;
+            if (parent) {
+                parent.replaceChild(document.createTextNode(span.textContent), span);
+                parent.normalize();
+            }
+        });
+    }
 
-    items.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        const answer = item.querySelector('.answer-inner');
-        const text = item.innerText.toLowerCase();
+    // 검색 입력 이벤트
+    searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase().trim();
+        const sections = document.querySelectorAll('.faq-section');
+        const items = document.querySelectorAll('.faq-item');
+        let hasAnyResult = false;
 
-        if (text.includes(term)) {
-            item.style.display = 'block';
-            item.closest('.faq-section').style.display = 'block';
-            item.classList.add('open');
-            
-            // 검색어 강조 적용
-            question.innerHTML = highlightText(question.innerHTML, term);
-            answer.innerHTML = highlightText(answer.innerHTML, term);
-            
-            hasAnyResult = true;
-        } else {
-            item.style.display = 'none';
-            item.classList.remove('open');
+        removeHighlight(); // 이전 강조 제거
+
+        if (term === '') {
+            resetUI();
+            return;
         }
-    });
 
-    noResults.style.display = hasAnyResult ? 'none' : 'block';
-});
+        // 모든 섹션 일단 숨김
+        sections.forEach(sec => sec.style.display = 'none');
+        backBtn.style.display = 'block';
 
-function clearSearch(e) {
-    if(e) e.preventDefault();
-    searchInput.value = '';
-    resetUI();
-}
+        items.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            const answer = item.querySelector('.answer-inner');
+            const text = item.innerText.toLowerCase();
+            const parentSection = item.closest('.faq-section');
 
-function resetUI() {
-    const activeNav = document.querySelector('.nav-item.active');
-    const activeSectionId = activeNav ? activeNav.getAttribute('onclick').match(/'([^']+)'/)[1] : 'sectionTop10';
-    
-    removeHighlight(); // 강조 제거 확인
-    backBtn.style.display = 'none';
-    noResults.style.display = 'none';
-    
-    document.querySelectorAll('.faq-section').forEach(sec => {
-        sec.style.display = 'none';
-        sec.classList.remove('active');
-    });
-    const target = document.getElementById(activeSectionId);
-    if(target) {
-        target.style.display = 'block';
-        target.classList.add('active');
-    }
-    
-    document.querySelectorAll('.faq-item').forEach(item => {
-        item.style.display = 'block';
-        item.classList.remove('open');
-    });
-}
+            if (text.includes(term)) {
+                item.style.display = 'block';
+                item.classList.add('open');
+                
+                // 결과가 있는 섹션만 표시 (구조 오류 방지)
+                if (parentSection) parentSection.style.display = 'block';
+                
+                // 검색어 강조 적용
+                if (question) question.innerHTML = highlightText(question.innerHTML, term);
+                if (answer) answer.innerHTML = highlightText(answer.innerHTML, term);
+                
+                hasAnyResult = true;
+            } else {
+                item.style.display = 'none';
+                item.classList.remove('open');
+            }
+        });
 
         noResults.style.display = hasAnyResult ? 'none' : 'block';
     });
 
-    // 이슈 2: 원래 상태로 되돌리는 함수
+    // 공통 복구 로직 (이슈 2 해결)
     function clearSearch(e) {
         if(e) e.preventDefault();
         searchInput.value = '';
@@ -1075,24 +1042,18 @@ function resetUI() {
     }
 
     function resetUI() {
+        removeHighlight();
         const activeNav = document.querySelector('.nav-item.active');
-        // 활성화된 메뉴가 없으면 기본으로 sectionTop10 표시
         const activeSectionId = activeNav ? activeNav.getAttribute('onclick').match(/'([^']+)'/)[1] : 'sectionTop10';
         
         backBtn.style.display = 'none';
         noResults.style.display = 'none';
         
         document.querySelectorAll('.faq-section').forEach(sec => {
-            sec.style.display = 'none';
-            sec.classList.remove('active');
+            sec.style.display = (sec.id === activeSectionId) ? 'block' : 'none';
+            if (sec.id === activeSectionId) sec.classList.add('active');
         });
 
-        const target = document.getElementById(activeSectionId);
-        if(target) {
-            target.style.display = 'block';
-            target.classList.add('active');
-        }
-        
         document.querySelectorAll('.faq-item').forEach(item => {
             item.style.display = 'block';
             item.classList.remove('open');
