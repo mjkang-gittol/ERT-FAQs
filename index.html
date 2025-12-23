@@ -918,117 +918,110 @@
 </div>
 
 <script>
-    // 1. 아코디언 제어: 개별적으로 열리고 닫히는 '시프티' 스타일
-    document.querySelectorAll('.faq-question').forEach(question => {
-        question.addEventListener('click', () => {
+    // 1. 아코디언 제어: 클릭 시 'open' 클래스 토글
+    // 이벤트 위임 방식을 사용하여 검색 후에도 이벤트가 안정적으로 유지되도록 합니다.
+    document.addEventListener('click', (e) => {
+        const question = e.target.closest('.faq-question');
+        if (question) {
             const item = question.parentElement;
-            // 클릭한 항목만 열림/닫힘(토글) 처리합니다.
             item.classList.toggle('open');
-        });
+        }
     });
 
     // 2. 카테고리 전환 기능
     function showSection(sectionId) {
-        // 모든 섹션과 메뉴의 활성화 상태를 초기화합니다.
-        document.querySelectorAll('.faq-section').forEach(sec => sec.classList.remove('active'));
+        document.querySelectorAll('.faq-section').forEach(sec => {
+            sec.classList.remove('active');
+            sec.style.display = 'none'; // 섹션 전환 시 display 제어
+        });
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
         
-        // 선택한 섹션과 메뉴를 활성화합니다.
         const targetSection = document.getElementById(sectionId);
         if (targetSection) {
             targetSection.classList.add('active');
+            targetSection.style.display = 'block';
         }
         
-        // 클릭된 메뉴에 active 클래스 추가
+        // 현재 클릭된 메뉴 활성화
         if (event && event.currentTarget) {
             event.currentTarget.classList.add('active');
         }
         
         // 검색창 초기화
         const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.value = '';
+        if (searchInput) searchInput.value = '';
+        
+        // '처음으로 돌아가기' 버튼 숨김
+        document.getElementById('back-to-home').style.display = 'none';
+        document.getElementById('no-results').style.display = 'none';
+    }
+
+    // 3. 검색 및 복구 기능 (이슈 1, 2 해결)
+    const searchInput = document.getElementById('searchInput');
+    const backBtn = document.getElementById('back-to-home');
+    const noResults = document.getElementById('no-results');
+
+    searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase().trim();
+        const sections = document.querySelectorAll('.faq-section');
+        const items = document.querySelectorAll('.faq-item');
+        let hasAnyResult = false;
+
+        if (term === '') {
+            resetUI();
+            return;
         }
-    }
 
-   // 3. 검색 및 복구 기능 (이슈 1, 2 해결)
-const searchInput = document.getElementById('searchInput');
-const backBtn = document.getElementById('back-to-home');
-const noResults = document.getElementById('no-results');
+        // 검색 시 모든 섹션 일단 숨김
+        sections.forEach(sec => sec.style.display = 'none');
+        backBtn.style.display = 'block';
 
-// 검색어 입력 시 로직
-searchInput.addEventListener('input', (e) => {
-    const term = e.target.value.toLowerCase();
-    const sections = document.querySelectorAll('.faq-section');
-    const items = document.querySelectorAll('.faq-item');
-    let hasAnyResult = false;
-
-    // 검색어가 비어있으면 초기 상태로 복구
-    if (term === '') {
-        resetUI();
-        return;
-    }
-
-    // 모든 섹션과 아이템 일단 숨김
-    sections.forEach(sec => sec.style.display = 'none');
-    backBtn.style.display = 'block'; // '처음으로 돌아가기' 표시
-
-    items.forEach(item => {
-        const text = item.innerText.toLowerCase();
-        if (text.includes(term)) {
-            item.style.display = 'block';
-            
- // 이슈 1: 검색 결과가 있는 아이템의 부모 섹션만 표시
-            item.closest('.faq-section').style.display = 'block';
-            item.classList.add('open'); // 검색 결과는 펼쳐서 보여줌
-            hasAnyResult = true;
-        } else {
-            item.style.display = 'none';
-            item.classList.remove('open');
-        }
-    });
-
-    noResults.style.display = hasAnyResult ? 'none' : 'block';
-});
-
-// 이슈 2: 원래 상태로 되돌리는 함수
-function clearSearch(e) {
-    if(e) e.preventDefault();
-    searchInput.value = '';
-    resetUI();
-}
-
-// 화면 UI를 검색 전 상태(활성화된 카테고리만 표시)로 되돌리는 공통 로직
-function resetUI() {
-    const activeNav = document.querySelector('.nav-item.active');
-    const activeSectionId = activeNav ? activeNav.getAttribute('onclick').match(/'([^']+)'/)[1] : 'sectionTop10';
-    
-    // 검색 관련 UI 숨김
-    backBtn.style.display = 'none';
-    noResults.style.display = 'none';
-    
-    // 모든 섹션 숨기고 현재 활성화된 섹션만 표시
-    document.querySelectorAll('.faq-section').forEach(sec => {
-        sec.style.display = 'none';
-        sec.classList.remove('active');
-    });
-    const target = document.getElementById(activeSectionId);
-    if(target) {
-        target.style.display = 'block';
-        target.classList.add('active');
-    }
-    
-    // 아이템 상태 초기화 (닫힘 상태로)
-    document.querySelectorAll('.faq-item').forEach(item => {
-        item.style.display = 'block';
-        item.classList.remove('open');
-    });
-}
-            // 결과 없음 안내 문구 처리
-            const noResults = document.getElementById('no-results');
-            if (noResults) {
-                noResults.style.display = found ? 'none' : 'block';
+        items.forEach(item => {
+            const text = item.innerText.toLowerCase();
+            if (text.includes(term)) {
+                item.style.display = 'block';
+                // 이슈 1: 검색 결과가 있는 섹션만 표시
+                item.closest('.faq-section').style.display = 'block';
+                item.classList.add('open'); 
+                hasAnyResult = true;
+            } else {
+                item.style.display = 'none';
+                item.classList.remove('open');
             }
+        });
+
+        noResults.style.display = hasAnyResult ? 'none' : 'block';
+    });
+
+    // 이슈 2: 원래 상태로 되돌리는 함수
+    function clearSearch(e) {
+        if(e) e.preventDefault();
+        searchInput.value = '';
+        resetUI();
+    }
+
+    function resetUI() {
+        const activeNav = document.querySelector('.nav-item.active');
+        // 활성화된 메뉴가 없으면 기본으로 sectionTop10 표시
+        const activeSectionId = activeNav ? activeNav.getAttribute('onclick').match(/'([^']+)'/)[1] : 'sectionTop10';
+        
+        backBtn.style.display = 'none';
+        noResults.style.display = 'none';
+        
+        document.querySelectorAll('.faq-section').forEach(sec => {
+            sec.style.display = 'none';
+            sec.classList.remove('active');
+        });
+
+        const target = document.getElementById(activeSectionId);
+        if(target) {
+            target.style.display = 'block';
+            target.classList.add('active');
+        }
+        
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.style.display = 'block';
+            item.classList.remove('open');
         });
     }
 </script>
