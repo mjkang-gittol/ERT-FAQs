@@ -3,255 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESG 리포팅 툴 - 자주 묻는 질문</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>ERT 플랫폼 자주 묻는 질문</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #002b5b; /* 상단 네이비 톤 */
-            --accent-color: #3b82f6;  /* 포인트 블루 */
-            --bg-color: #f9fafb;
-            --text-main: #1f2937;
-            --text-muted: #6b7280;
-            --border-color: #e5e7eb;
+            --primary-navy: #002b5b; /* QESG 상단 바 컬러 */
+            --accent-blue: #3b82f6;  /* 포인트 블루 */
+            --bg-gray: #f2f4f6;      /* 토스 스타일 배경 */
+            --text-main: #191f28;
+            --text-sub: #4e5968;
+            --white: #ffffff;
+            --border: #e5e8eb;
         }
 
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            background-color: var(--bg-color);
+            background-color: var(--bg-gray);
             margin: 0;
             color: var(--text-main);
+            line-height: 1.6;
         }
 
-        /* 헤더 & 검색바 */
+        /* 헤더 */
         header {
-            background-color: white;
-            padding: 40px 20px;
+            background-color: var(--white);
+            padding: 60px 20px;
             text-align: center;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border);
         }
 
         header h1 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: var(--primary-color);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-navy);
+            margin-bottom: 24px;
         }
 
-        .search-container {
+        .search-wrapper {
             max-width: 600px;
             margin: 0 auto;
             position: relative;
         }
 
-        .search-container input {
+        .search-wrapper input {
             width: 100%;
-            padding: 15px 20px;
-            font-size: 16px;
-            border: 1px solid var(--border-color);
+            padding: 16px 24px;
+            font-size: 17px;
+            border: none;
             border-radius: 12px;
+            background-color: #f9fafb;
+            box-shadow: inset 0 0 0 1px var(--border);
             outline: none;
-            transition: border 0.3s;
-            background-color: #f3f4f6;
+            transition: all 0.2s;
         }
 
-        .search-container input:focus {
-            border-color: var(--accent-color);
-            background-color: white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        .search-wrapper input:focus {
+            background-color: var(--white);
+            box-shadow: inset 0 0 0 2px var(--accent-blue);
         }
 
-        /* 메인 레이아웃 */
-        .container {
-            max-width: 1000px;
+        /* 메인 컨테이너 */
+        .main-container {
+            max-width: 1100px;
             margin: 40px auto;
             display: flex;
             gap: 40px;
             padding: 0 20px;
         }
 
-        /* 왼쪽 사이드바 카테고리 */
+        /* 사이드바 */
         nav {
-            width: 200px;
+            width: 240px;
             flex-shrink: 0;
             position: sticky;
             top: 20px;
             height: fit-content;
         }
 
+        nav h3 {
+            font-size: 14px;
+            color: var(--text-sub);
+            margin-bottom: 16px;
+            padding-left: 12px;
+        }
+
         nav ul {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         nav li {
-            padding: 12px 0;
+            padding: 12px 16px;
+            border-radius: 10px;
             cursor: pointer;
-            color: var(--text-muted);
             font-weight: 500;
-            transition: color 0.2s;
+            color: var(--text-sub);
+            transition: all 0.2s;
+            margin-bottom: 4px;
         }
 
-        nav li:hover, nav li.active {
-            color: var(--accent-color);
-            font-weight: 700;
+        nav li:hover {
+            background-color: rgba(0,0,0,0.04);
         }
 
-        /* 오른쪽 질문 리스트 */
-        .faq-content {
+        nav li.active {
+            background-color: var(--white);
+            color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        /* FAQ 콘텐츠 영역 */
+        .content {
             flex-grow: 1;
         }
 
-        .faq-group {
-            margin-bottom: 50px;
+        .faq-section {
+            display: none;
+            margin-bottom: 60px;
         }
 
-        .faq-group h2 {
-            font-size: 20px;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            color: var(--primary-color);
+        .faq-section.active {
+            display: block;
         }
 
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            padding-left: 4px;
+        }
+
+        /* 아코디언 아이템 */
         .faq-item {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
+            background-color: var(--white);
+            border-radius: 16px;
             margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .faq-question {
+            padding: 20px 24px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
+            font-weight: 500;
+            transition: background 0.2s;
         }
 
-        .faq-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        .faq-question:hover {
+            background-color: #fcfcfc;
         }
 
-        .faq-item span {
+        .faq-question::after {
+            content: '▼';
+            font-size: 12px;
+            color: var(--text-sub);
+            transition: transform 0.3s;
+        }
+
+        .faq-item.open .faq-question::after {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: #fafafa;
+            border-top: 1px solid transparent;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 500px;
+            border-top: 1px solid var(--border);
+        }
+
+        .answer-inner {
+            padding: 24px;
+            color: var(--text-sub);
             font-size: 16px;
+            white-space: pre-line; /* 줄바꿈 반영 */
         }
 
-        .faq-item::after {
-            content: 'Q';
-            color: var(--accent-color);
-            font-weight: bold;
-            font-size: 18px;
+        .situational-case {
+            background-color: #edf2f7;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 14px;
         }
 
-        /* 검색 결과 없음 처리 */
-        .no-result {
+        /* 검색 결과 없음 */
+        #no-results {
             display: none;
             text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
+            padding: 100px 0;
+            color: var(--text-sub);
+        }
+
+        @media (max-width: 768px) {
+            .main-container { flex-direction: column; }
+            nav { width: 100%; position: static; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>무엇이든 찾아보세요</h1>
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="궁금한 기능을 검색해보세요 (예: 요금제, 보고서)">
+    <h1>ERT 플랫폼 고객센터</h1>
+    <div class="search-wrapper">
+        <input type="text" id="searchInput" placeholder="궁금한 기능을 검색해보세요">
     </div>
 </header>
 
-<div class="container">
+<div class="main-container">
     <nav>
-        <ul id="categoryList">
-            <li class="active" onclick="filterCategory('all')">자주 묻는 질문 Top 10
-            <li onclick="filterCategory('group1')">계정 및 서비스</li>
-            <li onclick="filterCategory('group2')">리포트 기획</li>
-            <li onclick="filterCategory('group3')">데이터 입력</li>
-            <li onclick="filterCategory('group4')">검토 및 공시</li>
+        <h3>카테고리</h3>
+        <ul>
+            <li class="nav-item active" onclick="showSection('section1')">1. 계정 및 팀원 관리</li>
+            <li class="nav-item" onclick="showSection('section2')">2. 요금제 및 결제</li>
+            <li class="nav-item" onclick="showSection('section3')">3. 보고서 생성 및 관리</li>
+            <li class="nav-item" onclick="showSection('section4')">4. 산업 반영 및 중요주제</li>
+            <li class="nav-item" onclick="showSection('section5')">5. 목차 구성 및 디자인</li>
         </ul>
     </nav>
 
-    <main class="faq-content" id="faqContent">
-        
-        <section class="faq-group" data-group="group1">
-            <h2>Group 1: 계정 및 서비스 관리</h2>
-            <div class="faq-item"><span>계정 및 팀원 관리 방법이 궁금해요.</span></div>
-            <div class="faq-item"><span>요금제 변경 및 결제 수단은 어디서 등록하나요?</span></div>
+    <main class="content">
+        <section id="section1" class="faq-section active">
+            <div class="section-title">계정 및 팀원 관리</div>
+            <div class="faq-item">
+                <div class="faq-question">비밀번호를 변경하고 싶어요. 어디서 하나요?</div>
+                <div class="faq-answer"><div class="answer-inner">우측 상단 [내 계정 정보] > [내 정보 수정하기] > [비밀번호 변경하기] 메뉴에서 수정 및 저장이 가능합니다.</div></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">소속 회사명이나 연락처가 변경되었는데 수정이 가능한가요?</div>
+                <div class="faq-answer"><div class="answer-inner">네, [내 정보 수정하기] 메뉴에서 이메일을 제외한 연락처 및 회사명을 직접 수정하실 수 있습니다.</div></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">팀원들을 보고서 편집에 초대하려면 어떻게 하나요?</div>
+                <div class="faq-answer"><div class="answer-inner">[팀 구성 및 권한 관리] 메뉴에서 이메일 주소를 입력하여 초대장을 발송할 수 있습니다.</div></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">하나의 계정으로 다중 로그인이 가능한가요?</div>
+                <div class="faq-answer"><div class="answer-inner">보안 및 데이터 정합성을 위해 동시 접속은 제한됩니다. 새 로그인 시 기존 세션은 자동 종료됩니다.</div></div>
+            </div>
         </section>
 
-        <section class="faq-group" data-group="group2">
-            <h2>Group 2: 리포트 기획 및 설정</h2>
-            <div class="faq-item"><span>신규 보고서 생성 및 기존 보고서 관리</span></div>
-            <div class="faq-item"><span>산업별 맞춤형 중요주제(Materiality) 선정 가이드</span></div>
-            <div class="faq-item"><span>목차 구성 및 메인 페이지 디자인 커스텀</span></div>
+        <section id="section2" class="faq-section">
+            <div class="section-title">요금제 및 결제</div>
+            <div class="faq-item">
+                <div class="faq-question">결제 내역과 서비스 이용 기간은 어디서 확인하나요?</div>
+                <div class="faq-answer">
+                    <div class="answer-inner">우측 상단의 [결제 정보] 아이콘을 클릭한 후, [서비스 이용 내역] 탭에서 이용 만료일 및 상세 결제 내역을 확인할 수 있습니다.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">새 보고서 편집 가능 개수는 언제 초기화되나요?</div>
+                <div class="faq-answer">
+                    <div class="answer-inner">
+                        매년 1월 1일 연도가 바뀌면 새 보고서 편집 가능 개수가 초기화됩니다. 사용하지 않은 권한은 다음 해로 누적 이월되지 않습니다.
+                        <div class="situational-case">
+                            📌 상황 예시:<br>
+                            올해 9월 '스탠다드(1개 권한)' 플랜 결제 후 1개를 이미 편집했다면, 내년 1월 1일에 새롭게 1개의 편집 권한이 다시 부여됩니다.
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <section class="faq-group" data-group="group3">
-            <h2>Group 3: 콘텐츠 편집 및 데이터 입력</h2>
-            <div class="faq-item"><span>보고서 본문 작성 및 에디터 사용법</span></div>
-            <div class="faq-item"><span>차트 및 데이터 시각화 도구 활용하기</span></div>
-            <div class="faq-item"><span>글로벌 공시 인덱스 테이블(GRI/SASB/TCFD) 연동</span></div>
-            <div class="faq-item"><span>문서함 보관 및 정량 데이터 자산 관리</span></div>
+        <section id="section3" class="faq-section">
+            <div class="section-title">보고서 생성 및 관리</div>
+            <div class="faq-item">
+                <div class="faq-question">작년 보고서 내용을 그대로 가져와서 올해 보고서를 만들 수 있나요?</div>
+                <div class="faq-answer"><div class="answer-inner">네, 기존 보고서를 [복제(Copy)]하여 차년도 보고서의 틀로 활용할 수 있습니다.</div></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">보고서 주소(URL)를 우리 회사 이름으로 바꿀 수 있나요?</div>
+                <div class="faq-answer"><div class="answer-inner">네, 공개 링크 설정에서 기업명이나 발간 연도를 포함하도록 링크 수정이 가능합니다.</div></div>
+            </div>
         </section>
 
-        <section class="faq-group" data-group="group4">
-            <h2>Group 4: 검토, 번역 및 최종 공시</h2>
-            <div class="faq-item"><span>리포트 내부 검토 및 제3자 검증 프로세스</span></div>
-            <div class="faq-item"><span>다국어 전환 및 AI 자동 번역 기능</span></div>
-            <div class="faq-item"><span>보고서 외부 공개 설정 및 아카이빙 방법</span></div>
+        <section id="section4" class="faq-section">
+            <div class="section-title">산업 반영 및 중요주제 선정</div>
+            <div class="faq-item">
+                <div class="faq-question">우리 회사 산업군에 적합한 공시 지표를 어떻게 알 수 있나요?</div>
+                <div class="faq-answer"><div class="answer-inner">산업군과 규모 정보를 입력하면 플랫폼이 분석하여 최적화된 보고 지표와 목차를 자동 추천합니다.</div></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">GRI 3 표준에 따른 중요성 평가를 지원하나요?</div>
+                <div class="faq-answer"><div class="answer-inner">네, GRI 3 영향 중요성(Impact Materiality)을 고려한 지표 추천 기능을 제공합니다.</div></div>
+            </div>
         </section>
 
-        <div id="noResult" class="no-result">검색 결과가 없습니다. 다른 키워드로 검색해보세요.</div>
+        <section id="section5" class="faq-section">
+            <div class="section-title">목차 구성 및 디자인</div>
+            <div class="faq-item">
+                <div class="faq-question">메인 페이지 표지 디자인은 어디까지 수정 가능한가요?</div>
+                <div class="faq-answer"><div class="answer-inner">표지 이미지 업로드, 제목의 글씨체/색상/크기 조절이 가능하며 제목 위치 정렬(상하좌우)도 지원합니다.</div></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">보고서 하단(푸터)의 디자인도 설정할 수 있나요?</div>
+                <div class="faq-answer"><div class="answer-inner">네, 푸터 배경 색상 지정 및 패밀리 사이트 등 외부 링크 삽입이 가능합니다.</div></div>
+            </div>
+        </section>
+
+        <div id="no-results">검색 결과가 없습니다.</div>
     </main>
 </div>
 
 <script>
-    // 1. 카테고리 필터링 기능
-    function filterCategory(groupId) {
-        const groups = document.querySelectorAll('.faq-group');
-        const navItems = document.querySelectorAll('nav li');
-
-        // 사이드바 활성화 표시
-        navItems.forEach(item => item.classList.remove('active'));
-        event.target.classList.add('active');
-
-        // 콘텐츠 필터링
-        groups.forEach(group => {
-            if (groupId === 'all' || group.getAttribute('data-group') === groupId) {
-                group.style.display = 'block';
-            } else {
-                group.style.display = 'none';
+    // 1. 아코디언 제어
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+            const item = question.parentElement;
+            const isOpen = item.classList.contains('open');
+            
+            // 다른 아코디언 닫기 (선택 사항)
+            document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
+            
+            if (!isOpen) {
+                item.classList.add('open');
             }
         });
+    });
+
+    // 2. 카테고리 전환
+    function showSection(sectionId) {
+        document.querySelectorAll('.faq-section').forEach(sec => sec.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        
+        document.getElementById(sectionId).classList.add('active');
+        event.currentTarget.classList.add('active');
+        
+        // 검색창 초기화
+        document.getElementById('searchInput').value = '';
     }
 
-    // 2. 검색 기능
+    // 3. 검색 기능
     const searchInput = document.getElementById('searchInput');
-    const faqItems = document.querySelectorAll('.faq-item');
-    const noResult = document.getElementById('noResult');
-
     searchInput.addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
-        let hasVisibleItem = false;
+        const items = document.querySelectorAll('.faq-item');
+        let found = false;
 
-        faqItems.forEach(item => {
+        if (term === '') {
+            showSection('section1'); // 검색어 지우면 첫 섹션으로
+            return;
+        }
+
+        items.forEach(item => {
             const text = item.innerText.toLowerCase();
             if (text.includes(term)) {
-                item.style.display = 'flex';
-                hasVisibleItem = true;
+                item.style.display = 'block';
+                item.closest('.faq-section').style.display = 'block'; // 해당 섹션 보이기
+                item.classList.add('open'); // 검색된 항목은 펼치기
+                found = true;
             } else {
                 item.style.display = 'none';
             }
         });
 
-        // 그룹 제목 처리 (그룹 내 아이템이 하나도 없으면 제목도 숨김)
-        const groups = document.querySelectorAll('.faq-group');
-        groups.forEach(group => {
-            const itemsInGroup = group.querySelectorAll('.faq-item');
-            const visibleItems = Array.from(itemsInGroup).filter(i => i.style.display !== 'none');
-            group.style.display = visibleItems.length > 0 ? 'block' : 'none';
-        });
-
-        noResult.style.display = hasVisibleItem ? 'none' : 'block';
+        // 결과 없음 처리
+        document.getElementById('no-results').style.display = found ? 'none' : 'block';
     });
 </script>
 
