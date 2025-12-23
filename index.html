@@ -157,6 +157,7 @@
             border: none;
             width: 100%;
             text-align: left;
+            position: relative; /* 화살표 위치 기준점 */
         }
 
         .faq-question:hover {
@@ -165,14 +166,16 @@
 
         /* 질문 우측 화살표 아이콘 */
         .faq-question::after {
-            content: '';
-            width: 10px;
-            height: 10px;
-            border-top: 2px solid #adb5bd;
+           content: '';
+            width: 8px; /* 화살표 크기 */
+            height: 8px;
+            border-top: 2px solid #adb5bd; /* 화살표 선 두께와 색상 */
             border-right: 2px solid #adb5bd;
-            transform: rotate(135deg); /* 아래 방향 화살표 */
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            transform: rotate(135deg); /* 기본 상태: 아래 방향 */
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* 쫀득한 회전 애니메이션 */
             margin-left: 20px;
+            flex-shrink: 0; /* 글자가 길어져도 화살표 크기 유지 */
         }
 
 
@@ -906,7 +909,9 @@
             </div>
         </section>
 
-
+        <div id="back-to-home" style="display: none; margin-bottom: 20px;">
+            <a href="#" onclick="clearSearch(event)" style="color: #4e5968; text-decoration: none; font-size: 14px;">&lt; 처음으로 돌아가기</a>
+        </div>
         
         <div id="no-results">검색 결과가 없습니다.</div>
     </main>
@@ -946,32 +951,79 @@
         }
     }
 
-    // 3. 검색 기능
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const items = document.querySelectorAll('.faq-item');
-            let found = false;
+   // 3. 검색 및 복구 기능 (이슈 1, 2 해결)
+const searchInput = document.getElementById('searchInput');
+const backBtn = document.getElementById('back-to-home');
+const noResults = document.getElementById('no-results');
 
-            if (term === '') {
-                // 검색어가 없으면 첫 번째 섹션으로 복구
-                showSection('sectionTop10'); 
-                return;
-            }
+// 검색어 입력 시 로직
+searchInput.addEventListener('input', (e) => {
+    const term = e.target.value.toLowerCase();
+    const sections = document.querySelectorAll('.faq-section');
+    const items = document.querySelectorAll('.faq-item');
+    let hasAnyResult = false;
 
-            items.forEach(item => {
-                const text = item.innerText.toLowerCase();
-                if (text.includes(term)) {
-                    item.style.display = 'block';
-                    item.closest('.faq-section').style.display = 'block'; // 해당 섹션 보이기
-                    item.classList.add('open'); // 검색 결과는 자동으로 펼침
-                    found = true;
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+    // 검색어가 비어있으면 초기 상태로 복구
+    if (term === '') {
+        resetUI();
+        return;
+    }
 
+    // 모든 섹션과 아이템 일단 숨김
+    sections.forEach(sec => sec.style.display = 'none');
+    backBtn.style.display = 'block'; // '처음으로 돌아가기' 표시
+
+    items.forEach(item => {
+        const text = item.innerText.toLowerCase();
+        if (text.includes(term)) {
+            item.style.display = 'block';
+            
+ // 이슈 1: 검색 결과가 있는 아이템의 부모 섹션만 표시
+            item.closest('.faq-section').style.display = 'block';
+            item.classList.add('open'); // 검색 결과는 펼쳐서 보여줌
+            hasAnyResult = true;
+        } else {
+            item.style.display = 'none';
+            item.classList.remove('open');
+        }
+    });
+
+    noResults.style.display = hasAnyResult ? 'none' : 'block';
+});
+
+// 이슈 2: 원래 상태로 되돌리는 함수
+function clearSearch(e) {
+    if(e) e.preventDefault();
+    searchInput.value = '';
+    resetUI();
+}
+
+// 화면 UI를 검색 전 상태(활성화된 카테고리만 표시)로 되돌리는 공통 로직
+function resetUI() {
+    const activeNav = document.querySelector('.nav-item.active');
+    const activeSectionId = activeNav ? activeNav.getAttribute('onclick').match(/'([^']+)'/)[1] : 'sectionTop10';
+    
+    // 검색 관련 UI 숨김
+    backBtn.style.display = 'none';
+    noResults.style.display = 'none';
+    
+    // 모든 섹션 숨기고 현재 활성화된 섹션만 표시
+    document.querySelectorAll('.faq-section').forEach(sec => {
+        sec.style.display = 'none';
+        sec.classList.remove('active');
+    });
+    const target = document.getElementById(activeSectionId);
+    if(target) {
+        target.style.display = 'block';
+        target.classList.add('active');
+    }
+    
+    // 아이템 상태 초기화 (닫힘 상태로)
+    document.querySelectorAll('.faq-item').forEach(item => {
+        item.style.display = 'block';
+        item.classList.remove('open');
+    });
+}
             // 결과 없음 안내 문구 처리
             const noResults = document.getElementById('no-results');
             if (noResults) {
