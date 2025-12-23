@@ -7,9 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-navy: #002b5b; /* QESG 상단 바 컬러 */
-            --accent-blue: #3b82f6;  /* 포인트 블루 */
-            --bg-gray: #f2f4f6;      /* 토스 스타일 배경 */
+            --primary-navy: #002b5b;
+            --accent-blue: #3b82f6;
+            --bg-gray: #f2f4f6;
             --text-main: #191f28;
             --text-sub: #4e5968;
             --white: #ffffff;
@@ -24,7 +24,6 @@
             line-height: 1.6;
         }
 
-        /* 헤더 */
         header {
             background-color: var(--white);
             padding: 60px 20px;
@@ -57,12 +56,6 @@
             transition: all 0.2s;
         }
 
-        .search-wrapper input:focus {
-            background-color: var(--white);
-            box-shadow: inset 0 0 0 2px var(--accent-blue);
-        }
-
-        /* 메인 컨테이너 */
         .main-container {
             max-width: 1100px;
             margin: 40px auto;
@@ -71,20 +64,12 @@
             padding: 0 20px;
         }
 
-        /* 사이드바 */
         nav {
             width: 240px;
             flex-shrink: 0;
             position: sticky;
             top: 20px;
             height: fit-content;
-        }
-
-        nav h3 {
-            font-size: 14px;
-            color: var(--text-sub);
-            margin-bottom: 16px;
-            padding-left: 12px;
         }
 
         nav ul {
@@ -103,47 +88,24 @@
             margin-bottom: 4px;
         }
 
-        nav li:hover {
-            background-color: rgba(0,0,0,0.04);
-        }
-
         nav li.active {
             background-color: var(--white);
             color: var(--accent-blue);
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        /* FAQ 콘텐츠 영역 */
-        .content {
-            flex-grow: 1;
-        }
+        .content { flex-grow: 1; }
+        .faq-section { display: none; margin-bottom: 60px; }
+        .faq-section.active { display: block; }
+        .section-title { font-size: 24px; font-weight: 700; margin-bottom: 24px; }
 
-        .faq-section {
-            display: none;
-            margin-bottom: 60px;
-        }
-
-        .faq-section.active {
-            display: block;
-        }
-
-        .section-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 24px;
-            padding-left: 4px;
-        }
-
-        /* 아코디언 아이템 컨테이너 */
+        /* 아코디언 스타일 복구 */
         .faq-item {
             background-color: var(--white);
-            border-bottom: 1px solid var(--border); /* 항목 간 경계선 */
-            margin-bottom: 0; /* 시프티 스타일은 항목 사이 여백이 적음 */
+            border-bottom: 1px solid var(--border);
             overflow: hidden;
-            transition: background-color 0.3s;
         }
 
-        /* 질문 영역 */
         .faq-question {
             padding: 24px 30px;
             cursor: pointer;
@@ -152,88 +114,56 @@
             align-items: center;
             font-size: 17px;
             font-weight: 500;
-            color: var(--text-main);
-            background: none;
-            border: none;
-            width: 100%;
-            text-align: left;
+            transition: background 0.2s;
         }
 
-        .faq-question:hover {
-            background-color: #f9fafb;
-        }
+        .faq-question:hover { background-color: #f9fafb; }
 
-        /* 질문 우측 화살표 아이콘 */
+        /* 화살표 아이콘 복구 */
         .faq-question::after {
             content: '';
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-top: 2px solid #adb5bd;
             border-right: 2px solid #adb5bd;
-            transform: rotate(135deg); /* 아래 방향 화살표 */
+            transform: rotate(135deg);
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-left: 20px;
         }
 
-
-        /* 열렸을 때 화살표 회전 */
         .faq-item.open .faq-question::after {
-            transform: rotate(-45deg); /* 위 방향 화살표 */
+            transform: rotate(-45deg);
         }
 
-        /* 답변 영역 (배경색 추가 및 애니메이션 속도 조절) */
+        /* 답변 영역 애니메이션 복구 */
         .faq-answer {
             max-height: 0;
             opacity: 0;
             overflow: hidden;
-            background-color: #f9fafb; /* 영상처럼 답변 영역에 연한 그레이 배경 적용 */
-            /* 0.6초로 늘리고 쫀득한 베지어 곡선 적용 */
-            transition: max-height 0.7s cubic-bezier(0.4, 0, 0.2, 1), 
-                        opacity 0.4s ease;
+            background-color: #f9fafb; /* 시프티 스타일 배경색 */
+            transition: max-height 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
         }
 
-        /* 열린 상태 */
         .faq-item.open .faq-answer {
-            max-height: 1200px; /* 답변이 아주 길어도 수용 가능하도록 설정 */
+            max-height: 1200px;
             opacity: 1;
         }
-        
+
         .answer-inner {
-            padding: 30px 40px; /* 답변 내부 여백을 넉넉히 주어 가독성 향상 */
+            padding: 30px 40px;
             color: var(--text-sub);
-            font-size: 16px;
             border-top: 1px solid #f1f3f5;
         }
 
-        .situational-case {
-            background-color: #edf2f7;
-            padding: 16px;
-            border-radius: 8px;
-            margin-top: 12px;
-            font-size: 14px;
-        }
-
-        /* 검색 결과 없음 */
-        #no-results {
-            display: none;
-            text-align: center;
-            padding: 100px 0;
-            color: var(--text-sub);
-        }
-        /* AI 뱃지 스타일 */
         .badge-ai {
-            background-color: #8b5cf6; /* 보라색 */
+            background-color: #8b5cf6;
             color: white;
             padding: 2px 6px;
             border-radius: 4px;
             font-size: 11px;
-            font-weight: bold;
-            margin-left: 6px;
+            margin-left: 8px;
             vertical-align: middle;
-            display: inline-block;
-            line-height: 1.2;
         }
-        
+
         @media (max-width: 768px) {
             .main-container { flex-direction: column; }
             nav { width: 100%; position: static; }
@@ -243,525 +173,83 @@
 <body>
 
 <header>
-    <h1>ERT 자주 묻는 질문</h1>
+    <h1>ERT 플랫폼 고객센터</h1>
     <div class="search-wrapper">
-        <input type="text" id="searchInput" placeholder="궁금한 기능을 검색해 보세요">
+        <input type="text" id="searchInput" placeholder="궁금한 기능을 검색해보세요">
     </div>
 </header>
 
 <div class="main-container">
     <nav>
-        <h3>카테고리</h3>
         <ul>
-            <li class="nav-item active" onclick="showSection('sectionTop10')">자주 묻는 질문 TOP 10</li>
-            <li class="nav-item" onclick="showSection('section1')">1. 계정 및 팀원 관리</li>
-            <li class="nav-item" onclick="showSection('section2')">2. 요금제 및 결제</li>
-            <li class="nav-item" onclick="showSection('section3')">3. 보고서 생성 및 관리</li>
-            <li class="nav-item" onclick="showSection('section4')">4. 산업 반영 및 중요주제</li>
-            <li class="nav-item" onclick="showSection('section5')">5. 목차 구성 및 디자인</li>
+            <li class="nav-item active" onclick="showSection('sectionTop10')">⭐ TOP 10</li>
             <li class="nav-item" onclick="showSection('section6')">6. 보고서 작성 및 수정</li>
             <li class="nav-item" onclick="showSection('section7')">7. 도식, 표, 그래프</li>
-            <li class="nav-item" onclick="showSection('section8')">8. Index (GRI 등)</li>
-            <li class="nav-item" onclick="showSection('section9')">9. 보고서 작성</li>
-            <li class="nav-item" onclick="showSection('section10')">10. 정책 문서함</li>
-            <li class="nav-item" onclick="showSection('section11')">11. 검토 및 제3자 검증 </li>
-            <li class="nav-item" onclick="showSection('section12')">12. 보고서 번역</li>
-            <li class="nav-item" onclick="showSection('section13')">13. 공개 및 PDF 생성</li>
         </ul>
     </nav>
 
     <main class="content">
         <section id="sectionTop10" class="faq-section active">
-                    <div class="section-title">자주 묻는 질문 TOP 10</div>
-                    
-                    <div class="faq-item">
-                        <div class="faq-question">지표별 초안을 잡기 어려운데 AI가 써줄 수 있나요?<span class="badge-ai">AI</span></div>
-                        <div class="faq-answer"><div class="answer-inner">네, <strong>[AI 작성 도우미]</strong>가 GRI 등 국제 표준에 맞는 전문 문장 초안 작성을 도와 업무 시간을 최대 1/2로 단축해 드립니다.</div></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">작성한 문장을 AI로 더 정교하게 수정할 수 있나요?<span class="badge-ai">AI</span></div>
-                        <div class="faq-answer"><div class="answer-inner">콘텐츠 생성 후 우측 하단 <strong>[AI로 재작성]</strong> 버튼을 클릭하고 원하는 방향을 프롬프트로 요청하면 AI가 즉시 문장을 다듬어 제안합니다.</div></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">영문 보고서도 AI가 자동으로 번역해 주나요?<span class="badge-ai">AI</span></div>
-                        <div class="faq-answer"><div class="answer-inner">네, 머신러닝 기반 자동 영문 번역 기능을 통해 국문 보고서를 실시간으로 글로벌 공시용 영문 보고서로 산출할 수 있습니다.</div></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">우리 회사에 적합한 지표를 AI가 골라주나요?<span class="badge-ai">AI</span></div>
-                        <div class="faq-answer"><div class="answer-inner">기업의 산업군과 규모 정보를 기반으로 최적화된 보고 지표 set을 알고리즘이 자동으로 추천합니다.</div></div>
-                    </div>
-                    <div class="faq-item">
-                        <div class="faq-question">이전 작성 내용과 현재 내용을 비교해 볼 수 있나요?</div>
-                        <div class="faq-answer"><div class="answer-inner"><strong>[버전 관리] > [과거 버전 보기]</strong>에서 '비교 및 교체' 바로가기를 누르면 수정된 부분이 하이라이트되어 한눈에 차이점을 파악할 수 있습니다.</div></div>
-                    </div>
-                    </section>
-
-        
-        <section id="section1" class="faq-section active">
-            <div class="section-title">계정 및 팀원 관리</div>
+            <div class="section-title">자주 묻는 질문 TOP 10</div>
             <div class="faq-item">
-                <div class="faq-question">비밀번호를 변경하고 싶어요. 어디서 하나요?</div>
-                <div class="faq-answer"><div class="answer-inner">우측 상단 [내 계정 정보] > [내 정보 수정하기] > [비밀번호 변경하기] 메뉴에서 수정 및 저장이 가능합니다.</div></div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">소속 회사명이나 연락처가 변경되었는데 수정이 가능한가요?</div>
-                <div class="faq-answer"><div class="answer-inner">네, [내 정보 수정하기] 메뉴에서 이메일을 제외한 연락처 및 회사명을 직접 수정하실 수 있습니다.</div></div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">구글 계정으로도 가능한가요?</div>
-                <div class="faq-answer"><div class="answer-inner">네, 구글 간편 로그인(SSO)을 지원하며 계정 설정에서 연동 시 편리하게 접속하실 수 있으나 회사 도메인을 사용한 이메일로 가입하실 것을 권고 드립니다. </div></div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">하나의 계정으로 다중 로그인이 가능한가요?</div>
-                <div class="faq-answer"><div class="answer-inner">보안 및 데이터 정합성을 위해 동시 접속은 제한됩니다. 새 로그인 시 기존 세션은 자동 종료됩니다.</div></div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">팀원들을 보고서 편집에 초대하려면 어떻게 하나요?</div>
-                <div class="faq-answer"><div class="answer-inner">[팀 구성 및 권한 관리] 메뉴에서 이메일 주소를 입력하여 초대장을 발송할 수 있습니다. 초대된 팀원은 메일의 초대 링크를 통해 보고서에 접속이 가능합니다.</div></div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">한 보고서에 초대할 수 있는 팀원 수에 제한이 있나요?</div>
-                <div class="faq-answer"><div class="answer-inner">인원 제한 없이 초대 가능하여 재무, 인사 등 여러 부서 담당자와 실시간 공동 취합이 가능합니다.</div></div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">초대된 팀원이 할 수 있는 작업 범위는 어디까지인가요?</div>
-                <div class="faq-answer"><div class="answer-inner">콘텐츠 편집 및 데이터 입력 등 모든 작성 기능에 접근 가능하나, 보고서 삭제 및 권한 관리는 소유자만 가능합니다.</div></div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">팀원마다 접근 가능한 보고서 목차를 제한하고 싶어요.</div>
-                <div class="faq-answer"><div class="answer-inner">네 가능합니다. 예를 들어 환경 담당 팀은 환경 관련 보고서 목차에만 수정 권한을 부여할 수 있습니다. 다만 ERT 내에서 직접 설정하는 것은 아직 지원되지 않으므로 QESG 에게 문의 주시기 바랍니다. </div></div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">팀원들과 플랫폼 내에서 피드백을 주고받을 수 있나요?</div>
-                <div class="faq-answer"><div class="answer-inner">네, 플랫폼 내 댓글 기능을 활용하여 별도 메일 없이 지표별 수정 요청 및 업무 협업이 가능합니다.</div></div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">담당자가 변경되었는데 소유 권한을 넘길 수 있나요?</div>
-                <div class="faq-answer"><div class="answer-inner">[소유 권한 양도] 메뉴에서 새로운 담당자에게 소유권과 편집 권한을 안전하게 이전할 수 있습니다.</div></div>
-            </div>
-        </section>
-
-        <section id="section2" class="faq-section">
-            <div class="section-title">요금제 및 결제</div>
-            <div class="faq-item">
-                <div class="faq-question">ERT의 서비스 요금제 종류와 주요 차이점은 무엇인가요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">Basic, Pro, Pro+, Enterprise 4가지 플랜이 있으며, 보고서 종수, 편집 인원(3인~무제한), AI 번역 기능 포함 여부에 따라 구분됩니다.</div>
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">결제 방식에 따른 할인 혜택이 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">연간 구독 결제 시 월간 구독의 10% 할인 혜택을 제공합니다.</div>
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">여러 개의 보고서를 한 번에 관리해야 하는데, 어떤 플랜이 적합한가요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">여러 보고서 편집과 커스텀 개발이 가능한 Enterprise 플랜을 추천드립니다. 상세 비용은 별도 문의가 필요합니다.</div>
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">플랫폼 사용료 외에 검증 등 다른 서비스를 이용할 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">이중 중요성 평가, 전문 번역 및 감수, 제3자 검증 서비스 등은 별도 계약이 필요한 유료 옵션 항목입니다. 제3자 검증 등 별도 상품 이용을 원하시는 경우, 플랫폼 내 [문의하기]를 통해 상세 내용을 문의해 주시기 바랍니다.</div>
-                </div>
-            </div>                
-            <div class="faq-item">
-                <div class="faq-question">이용 요금은 부가세가 포함된 금액인가요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">아니요, 플랫폼의 모든 서비스 이용 요금은 부가세(VAT) 별도 금액입니다.</div>
-                </div>
-            </div>                
-            <div class="faq-item">
-                <div class="faq-question">현금영수증 발행은 어떻게 할 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">ERT 내에서 결제 시 자동으로 발행됩니다. 만약 세금계산서 발행을 희망하실 경우, 기 발행된 현금영수증은 취소됩니다. </div>
-                </div>
-            </div>                
-            <div class="faq-item">
-                <div class="faq-question">세금계산서 발행은 어떻게 할 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">세금계산서 발행을 원하시는 경우 info@qesg.co.kr로 메일 문의를 주시거나 사이트 오른쪽 하단의 챗봇 문의하기를 통해 문의 주시면 됩니다.</div>
-                </div>
-            </div>                
-            <div class="faq-item">
-                <div class="faq-question">현재 서비스 플랜과 잔여 보고서 생성 개수는 어디서 확인하나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">[내 계정 정보] 팝업의 '결제 정보' 섹션에서 플랜 종류와 생성 가능한 리포트 개수를 실시간으로 확인하실 수 있습니다.</div>
-                </div>
-            </div>                
-            <div class="faq-item">
-                <div class="faq-question">결제 내역과 서비스 이용 기간은 어디서 확인하나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">우측 상단의 [결제 정보] 아이콘을 클릭한 후, [서비스 이용 내역] 탭에서 이용 만료일 및 상세 결제 내역을 확인할 수 있습니다.</div>
-                </div>
-            </div>                
-            <div class="faq-item">
-                <div class="faq-question">새 보고서 편집 가능 개수는 언제 초기화되나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">
-                        매년 1월 1일 연도가 바뀌면 새 보고서 편집 가능 개수가 초기화됩니다. 사용하지 않은 권한은 다음 해로 누적 이월되지 않습니다.
-                        <div class="situational-case">
-                            📌 상황 예시:<br>
-                            올해 9월 '스탠다드(1개 권한)' 플랜 결제 후 1개를 이미 편집했다면, 내년 1월 1일에 새롭게 1개의 편집 권한이 다시 부여됩니다.
-                        </div>
-                    </div>
-                </div>
-            </div>           
-       
-        </section>
-
-                    <section id="section3" class="faq-section">
-            <div class="section-title">보고서 생성 및 기본 설정</div>
-            
-            <div class="faq-item">
-                <div class="faq-question">새로운 보고서 프로젝트는 어떻게 시작하나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">대시보드에서 [+ 새 보고서] 버튼을 클릭하여 생성합니다. 처음부터 원하는 형태와 표준을 선택하여 자유롭게 구성할 수 있습니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">작년 보고서 내용을 그대로 가져와서 올해 보고서를 만들 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">네, 기존에 작성된 보고서를 복제하여 차년도 보고서의 틀로 활용할 수 있습니다. 이를 통해 매년 반복되는 기본 정보 입력 시간을 단축하고 효율적으로 업데이트할 수 있습니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">'웹 보고서'와 '인덱스 테이블' 중 어떤 것을 선택해야 하나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">웹 보고서는 독자적인 웹사이트 형태로 이해관계자 소통에 최적화되어 있으며, 인덱스 테이블은 국제 표준에 맞춘 데이터 테이블 형식으로 공시 프로세스를 최소화하는 데 적합합니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">보고 프레임워크(GRI, SASB, TCFD)는 반드시 모두 선택해야 하나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">필요에 따라 선택 가능하지만, '웹 보고서' 형식을 선택한 경우에는 GRI Standards 선택이 필수입니다. Index Table을 선택한 경우에는 GRI, SASB, TCFD 중 하나를 선택해야 합니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">보고 기관(회사) 정보를 입력할 때 검색이 되지 않으면 어떡하나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">검색이 되지 않는 경우 기관명(국/영문), 주소, 로고 등을 직접 입력하여 수동으로 등록할 수 있습니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">보고서 생성 시 입력한 보고 기간이나 회사 정보를 나중에 수정할 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">네, [기본설정] > [보고서 설정] > [기본정보] 메뉴에서 보고서 명, 기간, 기관 정보 등을 언제든지 수정할 수 있습니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">처음 접속했는데 작성 예시를 볼 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">기본 제공되는 '샘플 보고서'를 통해 ESG 보고서의 구조를 확인하고 이를 복제하여 프로젝트를 시작할 수 있습니다.</div>
-                </div>
-            </div>
-        </section>
-
-        <section id="section4" class="faq-section">
-            <div class="section-title">산업 반영 및 중요주제 선정</div>
-        
-            <div class="faq-item">
-                <div class="faq-question">우리 회사 산업군에 적합한 공시 지표를 어떻게 알 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">산업군, 규모 등 기업 정보를 입력하면 최적화된 보고 지표와 목차 구성안을 자동으로 추천받을 수 있습니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">GRI 3 표준에 따른 '중요성 평가' 프로세스를 플랫폼에서 지원하나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">네, GRI 3 기준의 영향 중요성을 고려한 지표 추천 기능을 제공하여 중요 주제 선정 과정을 가이드합니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">지표 추천 기능을 사용하면 어떤 점이 좋나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">리서치와 기획에 투입되는 자원과 인력을 최소화할 수 있으며, 실제 보고서 작성 시간을 최대 1/2 수준으로 단축할 수 있는 장점이 있습니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">추천받은 지표나 주제를 우리 회사 상황에 맞춰 수정할 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">네, 추천된 지표 set을 기반으로 기업 현안에 맞춰 지표 선택 여부와 우선순위를 자유롭게 수정 및 편집할 수 있습니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">추천되는 지표는 무슨 기준인가요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner"><span style="color: red; font-weight: bold;">GRI? SASB? 무슨 산업군? 확인 필요</span> </div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">GRI 기준 준수(In Accordance With)' 보고를 위해 꼭 지켜야 할 설정이 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">중요주제로 선택한 모든 지표에 대해 '중요주제 관리(GRI 3-3)' 항목을 반드시 작성해야 기준 준수 상태가 인정됩니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">이중 중요성 평가(Double Materiality)를 위한 컨설팅을 별도로 받을 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">네, IRO 분석 등 고도화된 평가가 필요한 경우 별도 유료 옵션을 통해 전문 컨설팅 서비스를 이용하실 수 있습니다.</div>
-                </div>
-            </div>
-        </section>
-        <section id="section5" class="faq-section">
-            <div class="section-title">목차 구성 및 메인 페이지</div>
-        
-            <div class="faq-item">
-                <div class="faq-question">보고서 목차를 어떻게 구성하나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">[웹 보고서 편집] > [목차 구성]에서 '샘플 불러오기'로 산업별 맞춤 목차를 추천받거나, '새 목차 생성'으로 대/소분류를 직접 추가할 수 있습니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">보고서의 첫 화면인 메인페이지(커버)는 어떻게 꾸미나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">[메인페이지] 설정에서 표지 이미지, 제목 글꼴/색상/크기를 편집하고, 기업 소개나 성과 등 커버 구성 요소를 선택하여 배치할 수 있습니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">기업 브랜드 컬러나 전용 폰트를 적용할 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">네, [기본설정] > [디자인 테마 설정]에서 메인/보조 색상을 지정하고 본문 글씨체와 크기를 커스텀할 수 있습니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">메인 페이지에 우리 회사의 주요 성과나 목표를 노출할 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">네, [구성 요소 설정]에서 기업 소개, 기업 성과, 기업 목표 섹션을 활성화할 수 있습니다. 각 섹션별로 이미지, 슬로건, 상세 설명 및 관련 링크를 입력하여 풍성한 메인 페이지를 구성할 수 있습니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">특정 목차를 사이드 메뉴(내비게이션)에서 숨기고 싶은데 가능한가요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">목차 구성 페이지에서 소분류 옆 토글 버튼으로 내비게이션 표시 여부를 선택할 수 있으며, 해제 시 사이드 메뉴에서 제외됩니다.</div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">인덱스 테이블의 디자인도 변경할 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">인덱스 테이블은 3가지 기본 테마를 제공하며, 커스텀 테이블 스타일로 헤더 색상 및 테두리 등을 세부 설정할 수 있습니다.</div>
-                </div>
+                <div class="faq-question">지표별 초안을 AI가 써줄 수 있나요?<span class="badge-ai">AI</span></div>
+                <div class="faq-answer"><div class="answer-inner">네, <strong>[AI 작성 도우미]</strong>가 국제 표준에 맞는 초안 작성을 도와드립니다.</div></div>
             </div>
         </section>
 
         <section id="section6" class="faq-section">
             <div class="section-title">보고서 작성 및 수정</div>
-        
             <div class="faq-item">
-                <div class="faq-question">웹 보고서 본문 내용은 어떻게 작성 및 수정하나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">
-                        [웹 보고서 편집] > [보고서 작성] 메뉴에서 편집하고자 하는 목차를 클릭하여 작성을 시작합니다. 기존 내용을 수정할 때도 해당 목차로 이동하여 텍스트나 요소를 직접 편집할 수 있으며, 수정된 내용은 실시간으로 반영됩니다.
-                    </div>
-                </div>
+                <div class="faq-question">문장을 AI로 더 정교하게 수정할 수 있나요?<span class="badge-ai">AI</span></div>
+                <div class="faq-answer"><div class="answer-inner">콘텐츠 생성 후 우측 하단 <strong>[AI로 재작성]</strong> 버튼을 통해 가능합니다.</div></div>
             </div>
-        
             <div class="faq-item">
-                <div class="faq-question">이미 작성된 문장을 AI를 통해 더 정교하게 수정할 수 있나요? (AI 재작성)<span class="badge-ai">AI</span></div>
-                <div class="faq-answer">
-                    <div class="answer-inner">
-                        네, 콘텐츠 생성 후 우측 하단에 나타나는 <strong>[AI로 재작성]</strong> 버튼을 활용해 보세요. 원하는 수정 방향(예: 더 격식 있게, 요약해서 등)을 프롬프트로 요청하면 AI가 즉시 내용을 분석하여 문장을 새롭게 제안합니다.
-                    </div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">텍스트 외에 이미지나 표, 차트를 본문에 추가할 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">
-                        네, 작성란의 [+] 버튼을 클릭하여 이미지, 데이터 테이블, 차트, 비즈니스 사례 등 원하는 요소를 본문에 자유롭게 삽입할 수 있습니다.
-                    </div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">작성 중인 내용이 사라질까 봐 걱정돼요. 수동으로 저장해야 하나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">
-                        아니요, 플랫폼에 입력되는 모든 내용은 실시간으로 데이터베이스에 자동 저장되므로 소실 걱정 없이 작업에 집중하실 수 있습니다.
-                    </div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">특정 시점의 작업 내용을 따로 저장하거나 이름을 붙여 관리할 수 있나요? (버전 저장)</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">
-                        네, 왼쪽 네비게이션 바 하단의 [버전 관리] > [현재 버전 저장] 버튼을 통해 가능합니다. 변경 사항에 대한 제목과 설명을 입력하고 저장하면 해당 목차 단위로 고유한 버전 기록이 생성됩니다.
-                    </div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">이전에 작성했던 과거 내용을 확인하거나 되돌릴 수 있나요? (버전 목록)</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">
-                        네, <strong>[버전 관리] > [과거 버전 보기]</strong>를 클릭하면 저장된 보고서 목록이 팝업으로 나타납니다. 여기서 작성자, 생성 시간, 설명을 확인하고 원하는 기록을 찾아 즉시 이동할 수 있습니다.
-                    </div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">현재 작성 중인 내용과 과거 버전이 어떻게 다른지 비교할 수 있나요? (비교 및 교체)</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">
-                        네, 과거 버전 목록에서 <strong>[비교 및 교체]</strong>의 <strong>'바로가기'</strong>를 누르면 비교 화면이 뜹니다. 현재 버전과 과거 버전을 나란히 두고 수정된 부분이 하이라이트되어 나타나므로, 변경된 내용을 한눈에 파악하고 필요 시 해당 버전으로 교체할 수 있습니다.
-                    </div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">내용 작성이 완료되기 전에 실제 웹 사이트에서의 모습을 미리 볼 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">
-                        네, 왼쪽 메뉴의 [미리보기] 버튼을 클릭하여 실제 발행되었을 때의 디자인과 레이아웃을 실시간으로 확인하며 수정할 수 있습니다.
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section id="section7" class="faq-section">
-            <div class="section-title">도식, 표, 그래프</div>
-        
-            <div class="faq-item">
-                <div class="faq-question">보고서에 차트를 어떻게 추가하나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">
-                        본문 작성란의 <strong>[+] 버튼 > [차트]</strong>를 클릭하여 삽입합니다. 신규 생성이나 샘플 템플릿 중 선택하여 시작할 수 있습니다.
-                    </div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">어떤 종류의 차트와 샘플 템플릿이 제공되나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">
-                        막대, 파이, 도넛 차트 등이 지원되며 온실가스, 에너지, 안전보건 등 주요 ESG 지표 샘플이 기본 제공되어 바로 활용 가능합니다.
-                    </div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">차트 내 데이터 수치를 수정하려면 어떻게 하나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">
-                        <strong>[차트 데이터 편집]</strong> 탭에서 테이블 형식으로 수치를 직접 입력하거나 행/열을 관리하여 실시간으로 데이터를 변경할 수 있습니다.
-                    </div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">차트의 색상이나 디자인을 기업 브랜드에 맞게 바꿀 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">
-                        <strong>[차트 세부 설정]</strong>과 <strong>[차트 편집]</strong> 메뉴를 통해 항목별 색상, 제목 위치, 축 설정, 글씨 크기 등을 자유롭게 커스터마이징할 수 있습니다.
-                    </div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">일반 이미지 차트와 ERT의 HTML 기반 차트는 무엇이 다른가요?<span class="badge-ai">AI</span></div>
-                <div class="faq-answer">
-                    <div class="answer-inner">
-                        HTML 기반 차트는 텍스트 검색, 수치 즉시 수정, <strong>실시간 AI 번역</strong>이 가능하며 유지보수 비용을 획기적으로 줄여줍니다.
-                    </div>
-                </div>
-            </div>
-        
-            <div class="faq-item">
-                <div class="faq-question">엑셀(Excel)에 정리된 수치를 플랫폼으로 일괄 가져올 수 있나요?</div>
-                <div class="faq-answer">
-                    <div class="answer-inner">
-                        네, 엑셀 데이터를 복사하여 데이터 테이블에 직접 붙여넣기(Copy & Paste) 할 수 있어 대량의 정량 데이터를 오류 없이 빠르게 입력 가능합니다.
-                    </div>
-                </div>
+                <div class="faq-question">과거 버전과 현재 내용을 비교할 수 있나요?</div>
+                <div class="faq-answer"><div class="answer-inner"><strong>[버전 관리] > [비교 및 교체]</strong> 메뉴에서 수정된 부분을 하이라이트로 확인 가능합니다.</div></div>
             </div>
         </section>
 
-        
-        <div id="no-results">검색 결과가 없습니다.</div>
+        <section id="section7" class="faq-section">
+            <div class="section-title">도식, 표, 그래프</div>
+            <div class="faq-item">
+                <div class="faq-question">보고서에 차트를 어떻게 추가하나요?</div>
+                <div class="faq-answer"><div class="answer-inner">본문 작성란의 <strong>[+] 버튼 > [차트]</strong>를 클릭하여 삽입합니다.</div></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">차트 데이터 수치를 수정하려면 어떻게 하나요?</div>
+                <div class="faq-answer"><div class="answer-inner"><strong>[차트 데이터 편집]</strong> 탭에서 테이블 형식으로 수치를 직접 수정할 수 있습니다.</div></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">이미지 차트와 HTML 기반 차트의 차이점은 무엇인가요?<span class="badge-ai">AI</span></div>
+                <div class="faq-answer"><div class="answer-inner">HTML 기반 차트는 텍스트 검색과 <strong>실시간 AI 번역</strong>이 가능하여 유지보수가 매우 용이합니다.</div></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">엑셀(Excel) 데이터를 일괄 가져올 수 있나요?</div>
+                <div class="faq-answer"><div class="answer-inner">네, 엑셀 수치를 복사하여 데이터 테이블에 직접 붙여넣기(Copy & Paste) 할 수 있습니다.</div></div>
+            </div>
+        </section>
     </main>
 </div>
 
 <script>
-   // 1. 아코디언 제어 (영상처럼 개별적으로 열리고 닫히도록 수정)
-    document.querySelectorAll('.faq-question').forEach(question => {
-        question.addEventListener('click', () => {
+    // 아코디언 토글 로직 (시프티 스타일: 개별 열림 유지)
+    document.addEventListener('click', function(e) {
+        const question = e.target.closest('.faq-question');
+        if (question) {
             const item = question.parentElement;
-            
-            // 다른 아코디언을 닫는 로직을 제거했습니다.
-            // 클릭한 항목의 'open' 클래스만 토글(열기/닫기)합니다.
             item.classList.toggle('open');
-        });
-    });
-            
-            // 다른 아코디언 닫기 (선택 사항)
-            document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
-            
-            if (!isOpen) {
-                item.classList.add('open');
-            }
-        });
+        }
     });
 
-    // 2. 카테고리 전환
+    // 섹션 전환 로직
     function showSection(sectionId) {
         document.querySelectorAll('.faq-section').forEach(sec => sec.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
         
         document.getElementById(sectionId).classList.add('active');
-        event.currentTarget.classList.add('active');
-        
-        // 검색창 초기화
-        document.getElementById('searchInput').value = '';
+        const targetNav = document.querySelector(`[onclick="showSection('${sectionId}')"]`);
+        if (targetNav) targetNav.classList.add('active');
     }
-
-    // 3. 검색 기능
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        const items = document.querySelectorAll('.faq-item');
-        let found = false;
-
-        if (term === '') {
-            showSection('section1'); // 검색어 지우면 첫 섹션으로
-            return;
-        }
-
-        items.forEach(item => {
-            const text = item.innerText.toLowerCase();
-            if (text.includes(term)) {
-                item.style.display = 'block';
-                item.closest('.faq-section').style.display = 'block'; // 해당 섹션 보이기
-                item.classList.add('open'); // 검색된 항목은 펼치기
-                found = true;
-            } else {
-                item.style.display = 'none';
-            }
-        });
-
-        // 결과 없음 처리
-        document.getElementById('no-results').style.display = found ? 'none' : 'block';
-    });
 </script>
 
 </body>
