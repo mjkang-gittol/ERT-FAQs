@@ -703,66 +703,70 @@
 </div>
 
 <script>
-   // 1. 아코디언 제어 (영상처럼 개별적으로 열리고 닫히도록 수정)
+    // 1. 아코디언 제어: 개별적으로 열리고 닫히는 '시프티' 스타일
     document.querySelectorAll('.faq-question').forEach(question => {
         question.addEventListener('click', () => {
             const item = question.parentElement;
-            
-            // 다른 아코디언을 닫는 로직을 제거했습니다.
-            // 클릭한 항목의 'open' 클래스만 토글(열기/닫기)합니다.
+            // 클릭한 항목만 열림/닫힘(토글) 처리합니다.
             item.classList.toggle('open');
         });
     });
-            
-            // 다른 아코디언 닫기 (선택 사항)
-            document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
-            
-            if (!isOpen) {
-                item.classList.add('open');
-            }
-        });
-    });
 
-    // 2. 카테고리 전환
+    // 2. 카테고리 전환 기능
     function showSection(sectionId) {
+        // 모든 섹션과 메뉴의 활성화 상태를 초기화합니다.
         document.querySelectorAll('.faq-section').forEach(sec => sec.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
         
-        document.getElementById(sectionId).classList.add('active');
-        event.currentTarget.classList.add('active');
+        // 선택한 섹션과 메뉴를 활성화합니다.
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+        
+        // 클릭된 메뉴에 active 클래스 추가
+        if (event && event.currentTarget) {
+            event.currentTarget.classList.add('active');
+        }
         
         // 검색창 초기화
-        document.getElementById('searchInput').value = '';
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.value = '';
+        }
     }
 
     // 3. 검색 기능
     const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        const items = document.querySelectorAll('.faq-item');
-        let found = false;
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.faq-item');
+            let found = false;
 
-        if (term === '') {
-            showSection('section1'); // 검색어 지우면 첫 섹션으로
-            return;
-        }
+            if (term === '') {
+                // 검색어가 없으면 첫 번째 섹션으로 복구
+                showSection('sectionTop10'); 
+                return;
+            }
 
-        items.forEach(item => {
-            const text = item.innerText.toLowerCase();
-            if (text.includes(term)) {
-                item.style.display = 'block';
-                item.closest('.faq-section').style.display = 'block'; // 해당 섹션 보이기
-                item.classList.add('open'); // 검색된 항목은 펼치기
-                found = true;
-            } else {
-                item.style.display = 'none';
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(term)) {
+                    item.style.display = 'block';
+                    item.closest('.faq-section').style.display = 'block'; // 해당 섹션 보이기
+                    item.classList.add('open'); // 검색 결과는 자동으로 펼침
+                    found = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // 결과 없음 안내 문구 처리
+            const noResults = document.getElementById('no-results');
+            if (noResults) {
+                noResults.style.display = found ? 'none' : 'block';
             }
         });
-
-        // 결과 없음 처리
-        document.getElementById('no-results').style.display = found ? 'none' : 'block';
-    });
+    }
 </script>
-
-</body>
-</html>
